@@ -21,27 +21,31 @@ class LegoTest {
             }
         assertEquals(0, failCount)
     }
+
+    @Test
+    fun `Test case 2`() {
+        legoBlocks(10, 8)
+    }
 }
 
 fun legoBlocks(height: Int, width: Int): Int {
     val modulo = 1000000007
 
-    val allCombos = mutableListOf(0.0, 1.0, 2.0, 4.0, 8.0)
+    val allCombos = mutableListOf(0L, 1L, 2L, 4L, 8L)
     while (allCombos.size <= width) {
         allCombos.add(allCombos.takeLast(4).sum())
     }
     allCombos.forEachIndexed { i, v ->
-        // HackerRank doesn't like Kotlin Double.pow
-        allCombos[i] = Math.pow(v, height.toDouble())
+        repeat(height - 1) { allCombos[i] *= v}
     }
 
-    val solidCombos = mutableListOf(0.0, 1.0)
+    val solidCombos = mutableListOf(0L, 1L)
     for (w in 2..width) {
-        var sum = 0.0
+        var sum = 0L
         for (i in 1 until w) {
-            sum += (solidCombos[i] * allCombos[w - i]) % modulo
+            sum += (solidCombos[i] * allCombos[w - i])
         }
-        solidCombos.add((allCombos[w] - sum) % modulo)
+        solidCombos.add(allCombos[w] - sum)
     }
 
     return (solidCombos.last() % modulo).toInt()
@@ -60,7 +64,8 @@ fun legoBlocksBigDecimal(height: Int, width: Int): Int {
 
     }
     allCombos.forEachIndexed { i, v ->
-        allCombos[i] = v.pow(height)
+//        allCombos[i] = v.pow(height)
+        repeat(height - 1) { allCombos[i] = allCombos[i] * v}
     }
 
     val solidCombos = mutableListOf(BigDecimal(0), BigDecimal(1))
